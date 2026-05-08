@@ -9,6 +9,7 @@ Monitor CPU usage, memory consumption, and system health — all from your brows
 ![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?logo=nodedotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-06B6D4?logo=tailwindcss&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5.x-000000?logo=express&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-ISC-blue)
@@ -43,10 +44,12 @@ OS Assistant is a lightweight, full-stack system monitoring tool that collects r
 ## Features
 
 - **Real-time CPU monitoring** — Current system load percentage, updated on a configurable polling interval.
-- **Memory tracking** — Total and used memory at a glance.
+- **Active memory tracking** — Total and actively used memory at a glance, with percentage calculation.
+- **Live dashboard** — Dark-themed stat card UI with loading and error states.
 - **REST API** — Clean, versioned API endpoints for programmatic access.
-- **Live polling** — Client-side hook with configurable refresh interval (default: 2 seconds).
+- **Live polling** — Client-side hook with configurable refresh interval (default: 2 seconds) and cleanup on unmount.
 - **Modular architecture** — Feature-sliced frontend and module-based backend, designed to scale.
+- **Tailwind CSS v4** — Utility-first styling with Vite plugin integration.
 
 ## Tech Stack
 
@@ -58,6 +61,7 @@ OS Assistant is a lightweight, full-stack system monitoring tool that collects r
 | **System Data**| [systeminformation](https://github.com/sebhildebrandt/systeminformation)                           |
 | **Database**   | [MongoDB](https://www.mongodb.com/) via [Mongoose](https://mongoosejs.com/) *(planned)*            |
 | **Client**     | [React](https://react.dev/) 19 + [Vite](https://vite.dev/) 8                                      |
+| **Styling**    | [Tailwind CSS](https://tailwindcss.com/) 4 (Vite plugin)                                           |
 | **State**      | [Redux Toolkit](https://redux-toolkit.js.org/) *(planned)*                                         |
 | **Routing**    | [React Router](https://reactrouter.com/) 7                                                        |
 
@@ -152,19 +156,20 @@ npm run dev
 
 ```
 os-assistant/
-├── client/                     # React frontend (Vite)
+├── client/                     # React frontend (Vite + Tailwind CSS 4)
 │   ├── src/
 │   │   ├── api/                # API client functions
 │   │   │   └── system.api.ts       # fetchSystemStats()
 │   │   ├── components/         # Shared/reusable UI components
 │   │   ├── features/           # Feature-sliced modules
 │   │   │   └── system/
-│   │   │       └── SystemStats.tsx
+│   │   │       └── SystemStats.tsx  # Stat cards (CPU, Memory, Memory %)
 │   │   ├── hooks/              # Custom React hooks
-│   │   │   └── useSystemStats.ts   # Polling hook for system data
+│   │   │   └── useSystemStats.ts   # Polling hook with cleanup
 │   │   ├── layouts/            # Page layout wrappers
 │   │   ├── pages/              # Route-level page components
-│   │   │   └── DashboardPage.tsx
+│   │   │   ├── DashboardPage.tsx
+│   │   │   └── index.js            # Barrel exports
 │   │   ├── services/           # Business logic / external services
 │   │   ├── store/              # Redux store (planned)
 │   │   ├── types/              # Shared TypeScript interfaces
@@ -173,7 +178,7 @@ os-assistant/
 │   │   │   └── envConfig.ts
 │   │   ├── App.tsx
 │   │   ├── main.tsx
-│   │   └── index.css
+│   │   └── index.css           # Tailwind CSS entry (@import "tailwindcss")
 │   ├── index.html
 │   ├── vite.config.ts
 │   ├── tsconfig.json
@@ -229,20 +234,23 @@ Returns current CPU and memory statistics.
 }
 ```
 
-| Field          | Type     | Description                            |
-| -------------- | -------- | -------------------------------------- |
-| `cpu`          | `number` | Current CPU load as a percentage (0–100) |
-| `totalMemory`  | `number` | Total system memory in bytes             |
-| `usedMemory`   | `number` | Used system memory in bytes              |
+| Field          | Type     | Description                                        |
+| -------------- | -------- | -------------------------------------------------- |
+| `cpu`          | `number` | Current CPU load as a percentage (0–100)            |
+| `totalMemory`  | `number` | Total system memory in bytes                       |
+| `usedMemory`   | `number` | Active memory in bytes (excludes buffers/cache)    |
 
 ---
 
 ## Roadmap
 
-- [x] System stats API (CPU + memory)
+- [x] System stats API (CPU + active memory)
 - [x] React client scaffold with feature-sliced architecture
-- [x] Live polling hook (`useSystemStats`)
-- [ ] Dashboard UI with real-time charts
+- [x] Live polling hook (`useSystemStats`) with cleanup
+- [x] Dashboard UI with stat cards (CPU, Memory Used, Memory Total, Memory %)
+- [x] Tailwind CSS v4 integration with Vite plugin
+- [x] Barrel exports for clean page imports
+- [ ] Dashboard UI with real-time charts and graphs
 - [ ] Disk usage monitoring
 - [ ] Network stats (bandwidth, latency)
 - [ ] Process list and management

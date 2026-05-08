@@ -57,7 +57,9 @@ This separation of concerns keeps each layer independently testable and swappabl
 Exports `getSystemStats()` which queries `systeminformation` for:
 
 - **`currentLoad()`** → overall CPU load percentage.
-- **`mem()`** → total and used physical memory (in bytes).
+- **`mem()`** → total and active physical memory (in bytes).
+
+> **Note:** The service uses `memory.active` rather than `memory.used`. Active memory reflects memory currently in use by applications, excluding OS buffers and cached data, giving a more accurate picture of actual consumption.
 
 Returns a plain object:
 
@@ -65,7 +67,7 @@ Returns a plain object:
 {
   cpu: number;        // e.g. 12.45 (percentage)
   totalMemory: number; // e.g. 16086261760 (bytes)
-  usedMemory: number;  // e.g. 13789904896 (bytes)
+  usedMemory: number;  // e.g. 6454640640 (bytes) — active memory, excludes buffers/cache
 }
 ```
 

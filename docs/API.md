@@ -16,7 +16,7 @@ Endpoints for retrieving real-time operating system metrics.
 GET /api/system/stats
 ```
 
-Returns the current CPU load and memory usage of the host machine.
+Returns the current CPU load and active memory usage of the host machine.
 
 #### Request
 
@@ -40,7 +40,9 @@ No parameters, headers, or body required.
 | ------------- | -------- | ---------------------------------------------- | ------------------ |
 | `cpu`         | `number` | Aggregate CPU load across all cores (0–100 %)  | `12.45`            |
 | `totalMemory` | `number` | Total installed physical RAM in bytes           | `16086261760` (≈15 GB) |
-| `usedMemory`  | `number` | Currently used physical RAM in bytes            | `13789904896` (≈12.8 GB) |
+| `usedMemory`  | `number` | Active memory in bytes (excludes buffers/cache) | `6454640640` (≈6 GB) |
+
+> **Note:** `usedMemory` reports **active** memory (`memory.active` from `systeminformation`), which reflects memory currently in use by applications. This is more accurate than `memory.used`, which includes OS buffers and cached data.
 
 #### Example
 

@@ -7,6 +7,6 @@ export const getSystemStats = async () => {
   return {
     cpu: cpu.currentLoad,
     totalMemory: memory.total,
-    usedMemory: memory.used
+    usedMemory: memory.active
   }
 };

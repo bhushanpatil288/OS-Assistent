@@ -1,8 +1,10 @@
-
+import { DashboardPage } from "./pages";
 
 const App = () => {
   return (
-    <div>App</div>
+    <div className="min-h-screen bg-[#12121f]">
+      <DashboardPage />
+    </div>
   )
 }
 
