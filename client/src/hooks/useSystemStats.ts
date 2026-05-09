@@ -1,47 +1,33 @@
 import { useState, useEffect } from "react";
-import type { SystemStats } from "../types/system.types";
-import { fetchSystemStats } from "../api/system.api";
+import { getSocket } from "../services/socket";
+import type { SystemStats } from "@shared/types/system.types";
 
-interface useSystemStatsResult {
+interface UseSystemStatsResult {
   stats: SystemStats | null;
-  loading: boolean;
-  error: string | null;
+  connected: boolean;
 }
 
-export const useSystemStats = (pollInterval = 2000): useSystemStatsResult => {
+export const useSystemStats = (): UseSystemStatsResult => {
   const [stats, setStats] = useState<SystemStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const socket = getSocket();
 
-    const load = async () => {
-      try {
-        const data = await fetchSystemStats();
-        if (!cancelled) {
-          setStats(data);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Unknown error");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
+    const onConnect = () => setConnected(true);
+    const onDisconnect = () => setConnected(false);
+    const onStats = (data: SystemStats) => setStats(data);
 
-    load();
-
-    const interval = setInterval(load, pollInterval);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("system:stats", onStats);
 
     return () => {
-      cancelled = true;
-      clearInterval(interval);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("system:stats", onStats);
     };
-  }, [pollInterval]);
+  }, []);
 
-  return { stats, loading, error };
-}
-
+  return { stats, connected };
+};
