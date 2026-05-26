@@ -1,11 +1,18 @@
-import { DashboardPage } from "./pages";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  DashboardPage,
+  FilesPage,
+} from "./pages";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-[#12121f]">
-      <DashboardPage />
-    </div>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/files" element={<FilesPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
