@@ -6,12 +6,7 @@ export interface FileEntry {
   modified: Date;
 }
 
-export interface FileMeta {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  size: number;
-  modified: Date;
+export interface FileMeta extends FileEntry {
   extension: string | null;
 }
 
